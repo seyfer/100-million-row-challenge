@@ -78,7 +78,7 @@ jobs:
           
             php8.5 /usr/local/bin/composer install --no-dev
   
-            php8.5 tempest data:parse --store
+            php8.5 -d opcache.enable=1 -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=256M tempest data:parse --store
   
             git checkout main
   
