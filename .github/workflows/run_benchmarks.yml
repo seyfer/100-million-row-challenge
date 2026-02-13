@@ -79,9 +79,16 @@ jobs:
             php8.5 /usr/local/bin/composer install --no-dev
   
             php8.5 tempest data:parse --store
-  
+            
+            ENTRY=\$(tail -n 1 leaderboard.csv)
+
+            git reset --hard
+
+            git fetch origin main
             git checkout main
-  
+            git pull --ff-only origin main
+
+            echo \"\$ENTRY\" >> leaderboard.csv
             git add leaderboard.csv
   
             git commit -m '\''Update leaderboard'\'' || true
