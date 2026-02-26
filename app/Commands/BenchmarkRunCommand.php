@@ -13,6 +13,8 @@ final class BenchmarkRunCommand
 {
     use HasConsole;
 
+    private const string CACHE_KEY = 'prs';
+
     private ?string $token;
     private bool $persist = false;
 
@@ -29,6 +31,7 @@ final class BenchmarkRunCommand
         ?int $pr = null,
         bool $daemon = false,
         bool $persist = false,
+        bool $cache = false,
     ): void
     {
         if (! $this->token) {
@@ -37,6 +40,10 @@ final class BenchmarkRunCommand
         }
 
         $this->persist = $persist;
+
+        if ($cache === false) {
+            $this->cache->remove(self::CACHE_KEY);
+        }
 
         if ($daemon) {
             $this->warning('Daemon mode enabled. Press ctrl+c to stop.');
@@ -88,7 +95,7 @@ final class BenchmarkRunCommand
 
     private function fetchOpenPRs(): array
     {
-        return $this->cache->resolve('prs', function () {
+        return $this->cache->resolve(self::CACHE_KEY, function () {
             $allPrs = [];
             $page = 1;
             $perPage = 100;
